@@ -41,7 +41,7 @@ def bipartite_ranking_algorithm(file_path, lambda_factor=0.3, tol=1e-6, max_iter
             rating_errors = [abs(r - item_rankings[i]) for i, r in zip(items_rated, user_ratings["normalized_rating"].values)]
             avg_error = sum(rating_errors) / len(rating_errors)
             
-            user_reputation[user] = 1 - lambda_factor * avg_error
+            user_reputation[user] = 1 - lambda_factor * abs(avg_error
             user_reputation[user] = max(user_reputation[user], 0)  # Ensure non-negative reputation
         
         # Check for convergence
