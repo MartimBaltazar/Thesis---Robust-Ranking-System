@@ -1,6 +1,7 @@
 # Define input and output file names
-input_file = "/home/martim/Desktop/tese/datasets/ml-100k/u.data"
-output_file = "/home/martim/Desktop/tese/datasets/ml-100k/normalized_rating_movielns_100k.dat"
+input_file = "/home/martimsbaltazar/Desktop/tese/datasets/ml-100k/u.data"
+
+output_file = "/home/martimsbaltazar/Desktop/tese/datasets/ml-100k/normalized_rating_movielens_100k.dat"
 
 # Define min and max rating
 r_min = 1

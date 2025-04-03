@@ -12,7 +12,7 @@ def aggregated_ranking_algorithm(file_path):
     return item_rankings
 
 # Example usage
-rankings = aggregated_ranking_algorithm("/home/martim/Desktop/tese/datasets/ml-100k/normalized_rating_movielens_100k.dat")
+rankings = aggregated_ranking_algorithm("/home/martimsbaltazar/Desktop/tese/datasets/ml-100k/normalized_rating_movielens_100k.dat")
 
 # Extract the ratings from the rankings
 ratings = list(rankings.values())
