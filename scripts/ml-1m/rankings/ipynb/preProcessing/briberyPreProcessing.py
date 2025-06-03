@@ -60,7 +60,7 @@ def simulate_attack(df, target_item, mode="push", method="same", strategy="rando
             mask = (modified_df["UserID"] == user_id) & (modified_df["MovieID"] == target_item)
             old_rating = modified_df.loc[mask, "Rating"].values[0]
             new_rating = 5 if mode == "push" else 1
-            new_normalized = (new_rating - 1) / 4.0  # normalize to [0, 1]
+            new_normalized = new_rating / 5 
 
             modified_df.loc[mask, "Rating"] = new_rating
             modified_df.loc[mask, "NormalizedRating"] = new_normalized
@@ -71,7 +71,7 @@ def simulate_attack(df, target_item, mode="push", method="same", strategy="rando
         new_user_id = max_user_id + 1
         timestamp = int(df["Timestamp"].mean())
         new_rating = 5 if mode == "push" else 1
-        new_normalized = (new_rating - 1) / 4.0
+        new_normalized = new_rating / 5 
 
         for _ in range(n_target):
             new_row = pd.DataFrame(
@@ -115,9 +115,12 @@ for item_id in target_items:
         txt_path = os.path.join(folder_name, f"{file_prefix}_changes.txt")
 
         attacked_df.to_csv(csv_path, index=False)
-
+        
         with open(txt_path, "w") as f:
             for user_id, old, new in change_log:
-                f.write(f"UserID: {user_id}, Old: {old}, New: {new}\n")
+                old_norm = old / 5.0 if old is not None else "None"
+                new_norm = new / 5.0 if new is not None else "None"
+                f.write(f"UserID: {user_id}, Old: {old_norm}, New: {new_norm}\n")
+
 
 print("✔️ All bribery attack datasets and logs generated.")
