@@ -9,13 +9,25 @@ def aggregated_ranking_algorithm(file_path):
         data = [json.loads(line) for line in f]
     df = pd.DataFrame(data)
 
+    # Get unique users and items
+    users = df["user_id"].unique()
+    items = df["book_id"].unique()
+
+    # Normalize the 'overall' column to range [0, 1]
+    min_rating = 1
+    max_rating = 5
+
+
+    df["normalizedOverall"] = (df["rating"] - min_rating) / (max_rating - min_rating)
+
+
     # Compute item rankings as the average of normalized ratings
-    item_rankings = df.groupby("asin")["normalizedOverall"].mean().to_dict()
+    item_rankings = df.groupby("book_id")["normalizedOverall"].mean().to_dict()
 
     return item_rankings
 
 # Example usage
-file_path = "/home/martim/Desktop/tese/datasets/amazon_beauty/Luxury_Beauty_5_normalized.json"  # Replace with your dataset path
+file_path = "/home/martimsbaltazar/Desktop/tese/datasets/goodreads/goodreads_reviews_spoiler.json"  # Replace with your dataset path
 rankings = aggregated_ranking_algorithm(file_path)
 
 # Extract ratings from the rankings
