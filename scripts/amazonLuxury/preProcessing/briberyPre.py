@@ -124,7 +124,9 @@ for item_id in target_items:
         txt_path = os.path.join(folder_name, f"{file_prefix}_changes.txt")
 
         with open(json_path, "w") as f:
-            json.dump(attacked_data, f, indent=2)
+            for record in attacked_data:
+                f.write(json.dumps(record) + "\n")
+
 
         with open(txt_path, "w") as f:
             for user_id, old, new in change_log:
