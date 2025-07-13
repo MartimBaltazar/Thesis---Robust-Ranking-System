@@ -61,7 +61,8 @@ def simulate_attack_dict(data, target_item, mode="push", method="same", strategy
                 new_rating = 5 if mode == "push" else 1
                 review['rating'] = new_rating
                 review['normalizedOverall'] = normalize(new_rating)
-                changes.append((review['user_id'], old_rating, new_rating))
+                changes.append((review['user_id'], normalize(old_rating), normalize(new_rating)))
+
 
     else:  # method == "new"
         new_reviews = []
@@ -84,7 +85,7 @@ def simulate_attack_dict(data, target_item, mode="push", method="same", strategy
                 "review_id": f"synthetic_review_{random.getrandbits(64):x}"
             }
             new_reviews.append(new_review)
-            changes.append((new_user_id, None, new_rating))
+            changes.append((new_user_id, None, normalize(new_rating)))
             new_uid_counter += 1
 
         modified_data.extend(new_reviews)
@@ -109,7 +110,6 @@ for item_id in target_items:
     os.makedirs(folder_name, exist_ok=True)
 
     for mode, method, strategy in scenarios:
-        print(f"Simulating: item {item_id}, mode={mode}, method={method}, strategy={strategy}")
         attacked_data, change_log = simulate_attack_dict(
             data, item_id,
             mode=mode,
@@ -123,6 +123,7 @@ for item_id in target_items:
         json_path = os.path.join(folder_name, f"{file_prefix}.json")
         txt_path = os.path.join(folder_name, f"{file_prefix}_changes.txt")
 
+        
         with open(json_path, "w") as f:
             for record in attacked_data:
                 f.write(json.dumps(record) + "\n")
