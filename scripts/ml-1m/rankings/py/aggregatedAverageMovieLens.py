@@ -25,7 +25,7 @@ bribery_dir = "/home/martimsbaltazar/Desktop/tese/datasets/ml-1m/bribery_attack_
 original_path = "/home/martimsbaltazar/Desktop/tese/datasets/ml-1m/normalized_ratings.dat"
 
 ratios = [10, 30, 50, 70]
-target_items = [1749, 2261, 2858]
+target_items = [2858]
 
 # === Load original dataset ===
 df = pd.read_csv(original_path, sep="::", engine="python", 
@@ -42,48 +42,49 @@ def compute_kendall_tau(dict1, dict2):
     tau, _ = kendalltau(v1, v2)
     return tau
 
-# === Robustness (Spam Resistance) ===
-print("=== Aggregated Average Robustness (Spam) ===")
-for percent in ratios:
-    start_time = time.time()
+# # === Robustness (Spam Resistance) ===
+# print("=== Aggregated Average Robustness (Spam) ===")
+# for percent in ratios:
+#     start_time = time.time()
 
-    file_name = f"ratings_with_{percent}percent_spam.csv"
-    file_path = os.path.join(spam_dir, file_name)
+#     file_name = f"ratings_with_{percent}percent_spam.csv"
+#     file_path = os.path.join(spam_dir, file_name)
 
-    df_attack = pd.read_csv(file_path)
-    df_attack.columns = ['UserID', 'MovieID', 'Rating', 'Timestamp', 'NormalizedRating']
+#     df_attack = pd.read_csv(file_path)
+#     df_attack.columns = ['UserID', 'MovieID', 'Rating', 'Timestamp', 'NormalizedRating']
 
-    attack_avg_rankings = df_attack.groupby("MovieID")["NormalizedRating"].mean().sort_values(ascending=False)
-    attack_avg_dict = attack_avg_rankings.to_dict()
+#     attack_avg_rankings = df_attack.groupby("MovieID")["NormalizedRating"].mean().sort_values(ascending=False)
+#     attack_avg_dict = attack_avg_rankings.to_dict()
 
-    tau_value = compute_kendall_tau(original_avg_dict, attack_avg_dict)
+#     tau_value = compute_kendall_tau(original_avg_dict, attack_avg_dict)
 
-    elapsed_time = time.time() - start_time
-    print(f"[{percent}% Spam] Kendall’s τ: {tau_value:.4f} — Time: {elapsed_time:.2f} seconds")
+#     elapsed_time = time.time() - start_time
+#     print(f"[{percent}% Spam] Kendall’s τ: {tau_value:.4f} — Time: {elapsed_time:.2f} seconds")
 
 
-# === Plot Original Distribution ===
-ratings = list(original_avg_dict.values())
-bins = np.arange(0, 1.1, 0.1)
-hist, bin_edges = np.histogram(ratings, bins=bins)
+# # === Plot Original Distribution ===
+# ratings = list(original_avg_dict.values())
+# bins = np.arange(0, 1.1, 0.1)
+# hist, bin_edges = np.histogram(ratings, bins=bins)
 
-plt.figure(figsize=(10, 6))
-plt.bar(bin_edges[:-1], hist, width=0.1, align='edge', edgecolor='black', color='skyblue')
-for i in range(len(hist)):
-    plt.text(bin_edges[i] + 0.05, hist[i] + 0.5, str(hist[i]), ha='center', fontsize=12)
-plt.xlabel('Aggregated Average Rating', fontsize=12)
-plt.ylabel('Number of Movies', fontsize=12)
-plt.title('Distribution of Aggregated Average Movie Ratings (Original)', fontsize=14)
-plt.xticks(bins)
-plt.grid(axis='y', linestyle='--', alpha=0.7)
-plt.tight_layout()
-plt.show()
+# plt.figure(figsize=(10, 6))
+# plt.bar(bin_edges[:-1], hist, width=0.1, align='edge', edgecolor='black', color='skyblue')
+# for i in range(len(hist)):
+#     plt.text(bin_edges[i] + 0.05, hist[i] + 0.5, str(hist[i]), ha='center', fontsize=12)
+# plt.xlabel('Aggregated Average Rating', fontsize=12)
+# plt.ylabel('Number of Movies', fontsize=12)
+# plt.title('Distribution of Aggregated Average Movie Ratings (Original)', fontsize=14)
+# plt.xticks(bins)
+# plt.grid(axis='y', linestyle='--', alpha=0.7)
+# plt.tight_layout()
+# plt.show()
 
 
 # === Bribery Resistance ===
 def compute_wealth_avg(df, item_id, rankings):
     n_ratings = df[df["MovieID"] == item_id].shape[0]
     avg_rating = rankings.get(item_id, 0)
+    print(f"Item {item_id}: n_ratings={n_ratings}, avg_rating={avg_rating}")
     return n_ratings * avg_rating
 
 def parse_strategy_cost(txt_path, scale_by_user=False):

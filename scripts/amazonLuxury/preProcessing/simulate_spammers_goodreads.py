@@ -10,7 +10,7 @@ def load_jsonl_dataset(path):
     with open(path, 'r') as f:
         data = [json.loads(line) for line in f]
     df = pd.DataFrame(data)
-    df["normalizedOverall"] = (df["rating"] - 1) / 4  # normalize to [0, 1]
+    df["normalizedOverall"] = (df["rating"] + 1) / 6  # normalize to [0, 1]
     return df, data
 
 # === Compute item popularity ===
@@ -30,8 +30,8 @@ def simulate_random_spammers_json(num_spammers, item_popularity_dist, user_id_st
         sampled_items = np.random.choice(item_ids, size=min(num_ratings, len(item_ids)), replace=False, p=item_probs)
 
         for book_id in sampled_items:
-            rating = np.random.randint(1, max_rating + 1)
-            norm_rating = (rating - 1) / 4
+            rating = np.random.randint(0, max_rating + 1)
+            norm_rating = (rating + 1) / 6
             review = {
                 "user_id": user_id,
                 "timestamp": datetime.now().strftime("%Y-%m-%d"),
@@ -56,7 +56,7 @@ def add_spammers_to_json_data(data, df, spammer_ratio=0.1, lambda_poisson=5):
     return data + spam_reviews, spam_reviews
 
 # === Generate spammy datasets ===
-def generate_spam_versions(json_data, df, ratios, lambda_poisson=5, output_dir="spam_versions_goodreads"):
+def generate_spam_versions(json_data, df, ratios, lambda_poisson=5, output_dir="home/martimsbaltazar/Desktop/tese/datasets/goodreads/spam_versions_goodreads2"):
     os.makedirs(output_dir, exist_ok=True)
 
     for ratio in ratios:

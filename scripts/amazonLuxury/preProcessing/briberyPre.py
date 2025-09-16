@@ -29,7 +29,7 @@ print(f"Selected items: High - {high}, Mid - {mid}, Low - {low}")
 userReputation = defaultdict(lambda: 0.5)  # Dummy: everyone has 0.5 rep
 
 # === Output folder setup ===
-output_root = "/home/martimsbaltazar/Desktop/tese/datasets/goodreads/bribery_attack_sets"
+output_root = "/home/martimsbaltazar/Desktop/tese/datasets/goodreads/bribery_attack_sets2"
 os.makedirs(output_root, exist_ok=True)
 
 def simulate_attack_dict(data, target_item, mode="push", method="same", strategy="random",
@@ -43,8 +43,7 @@ def simulate_attack_dict(data, target_item, mode="push", method="same", strategy
     original_users = list({r['user_id'] for r in item_reviews})
     n_target = max(1, int(len(original_users) * percentage))
 
-    def normalize(rating): return (rating - 1) / 4
-    def denormalize(norm): return int(round(norm * 4 + 1))
+    def normalize(rating): return (rating + 1) / 6
 
     if method == "same":
         if strategy == "random":
@@ -58,18 +57,18 @@ def simulate_attack_dict(data, target_item, mode="push", method="same", strategy
         for review in modified_data:
             if review['book_id'] == target_item and review['user_id'] in selected_users:
                 old_rating = review['rating']
-                new_rating = 5 if mode == "push" else 1
+                new_rating = 1 if mode == "push" else 1/6
                 review['rating'] = new_rating
-                review['normalizedOverall'] = normalize(new_rating)
-                changes.append((review['user_id'], normalize(old_rating), normalize(new_rating)))
+                review['normalizedOverall'] = new_rating
+                changes.append((review['user_id'], normalize(old_rating), new_rating))
 
 
     else:  # method == "new"
         new_reviews = []
         max_uid_base = hash(max([r['user_id'] for r in data], key=hash)) % (10**6)
         new_uid_counter = 0
-        new_rating = 5 if mode == "push" else 1
-        new_normalized = normalize(new_rating)
+        new_rating = 1 if mode == "push" else 1/6
+        new_normalized = new_rating
         timestamp = max(r['timestamp'] for r in data)
 
         for _ in range(n_target):
@@ -85,7 +84,7 @@ def simulate_attack_dict(data, target_item, mode="push", method="same", strategy
                 "review_id": f"synthetic_review_{random.getrandbits(64):x}"
             }
             new_reviews.append(new_review)
-            changes.append((new_user_id, None, normalize(new_rating)))
+            changes.append((new_user_id, None, new_rating))
             new_uid_counter += 1
 
         modified_data.extend(new_reviews)

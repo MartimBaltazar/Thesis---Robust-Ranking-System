@@ -14,7 +14,7 @@ df = pd.read_csv(file_path, sep=',')
 df.columns = ['user_id', 'item_id', 'normalized_rating']
 
 # Normalize ratings if not already normalized (assuming ratings are 0-10 scale)
-df['normalized_rating'] = df['normalized_rating'] / 10
+df['normalized_rating'] = (df['normalized_rating'] + 1) / 11
 
 # === Compute reputations using bipartite ranking algorithm ===
 rankings, userReputation = bipartite_ranking_algorithm(df.rename(columns={
@@ -39,7 +39,7 @@ target_items = [high, mid, low]
 print(f"Selected items: High - {high}, Mid - {mid}, Low - {low}")
 
 # === Prepare output folder ===
-output_root = "/home/martimsbaltazar/Desktop/tese/datasets/BookCrossing/bribery_attack_sets"
+output_root = "/home/martimsbaltazar/Desktop/tese/datasets/BookCrossing/bribery_attack_sets2"
 os.makedirs(output_root, exist_ok=True)
 
 # === Attack simulation function adapted for BookCrossing ===
@@ -73,7 +73,7 @@ def simulate_attack(df, target_item, mode="push", method="same", strategy="rando
             mask = (modified_df["user_id"] == user_id) & (modified_df["item_id"] == target_item)
             old_rating = modified_df.loc[mask, "normalized_rating"].values[0]
             # For BookCrossing normalized rating [0..1], push = +0.25, nuke = -0.25, capped between 0 and 1
-            new_rating = 1 if mode == "push" else 0.1
+            new_rating = 1 if mode == "push" else 1/11
             modified_df.loc[mask, "normalized_rating"] = new_rating
             changes.append((user_id, old_rating, new_rating))
 
@@ -81,7 +81,7 @@ def simulate_attack(df, target_item, mode="push", method="same", strategy="rando
         max_user_id = df["user_id"].max()
         new_user_id = max_user_id + 1
         timestamp = 0  # No timestamp in this dataset
-        new_rating = 1.0 if mode == "push" else 0.2
+        new_rating = 1.0 if mode == "push" else 1/11
 
         for _ in range(n_target):
             new_row = pd.DataFrame(
