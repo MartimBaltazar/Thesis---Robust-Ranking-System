@@ -37,13 +37,18 @@ This approach avoids assigning individual reputation scores, thus maintaining co
 The proposed system was evaluated against four state-of-the-art ranking systems (Aggregated Average RS, Reputation-based Bipartite RS, User-Agnostic Bipartite RS, and Reputation-based Multipartite RS).
 
 ### Datasets Used
-| Dataset | Type | Item Count ($\vert I \vert$) | User Count ($\vert U \vert$) | Ratings Count ($\vert R \vert$) |
+
+The experiments were conducted using the following datasets, each preprocessed to ensure a **5-core version** for analysis (meaning every user and item has at least 5 ratings).
+
+| Dataset | Type | User Count ($\vert \mathcal{U} \vert$) | Ratings Count ($\vert R \vert$) | Item Count ($\vert \mathcal{I} \vert$) |
 | :--- | :--- | :--- | :--- | :--- |
-| **BookCrossing** | Book Ratings | | | |
-| **Movielens-1M** | Movie Ratings | | | |
-| **Amazon Luxury** | Product Ratings | | | |
+| **Bookcrossing** | Book Ratings | $6,000$ | $305,216$ | $146,161$ |
+| **Movielens-1M** | Movie Ratings | $6,040$ | $1,000,209$ | $3,952$ |
+| **Goodreads** | Book Reviews/Ratings | $18,892$ | $1,378,033$ | $25,475$ |
 
 *Note: Datasets were preprocessed to ensure a 5-core version for analysis.*
+
+---
 
 ### Evaluation Metrics
 
