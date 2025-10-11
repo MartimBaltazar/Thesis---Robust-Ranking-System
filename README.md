@@ -6,13 +6,13 @@ The core of this work is the development and evaluation of a **User-Agnostic Mul
 
 ---
 
-## Project Goal
+## 🚀 Project Goal
 
 To develop a ranking system that aligns with today's ethical and technical standards by focusing on item-based characteristics, ensuring **AI Act compliance**, **fairness**, and strong **resistance to bribery and spam**.
 
 ---
 
-## Key Contributions
+## 💡 Key Contributions
 
 1.  **User-Agnostic Multipartite Framework (UAMRS):** An extension of the user-agnostic bipartite framework into a multipartite setting, grouping users based on rating patterns to enhance robustness and confine the impact of individual users to their cluster.
 2.  **Complementary Cluster Concept:** A novel mechanism to manage clusters that are too small, aggregating users below a predefined size threshold into a complementary cluster to ensure meaningful results.
@@ -20,7 +20,7 @@ To develop a ranking system that aligns with today's ethical and technical stand
 
 ---
 
-## Methodology: User-Agnostic Multipartite Ranking System (UAMRS)
+## 💻 Methodology: User-Agnostic Multipartite Ranking System (UAMRS)
 
 The UAMRS operates through the following key steps:
 
@@ -32,7 +32,7 @@ This approach avoids assigning individual reputation scores, thus maintaining co
 
 ---
 
-##  Experimental Evaluation
+## 📊 Experimental Evaluation
 
 The proposed system was evaluated against four state-of-the-art ranking systems (Aggregated Average RS, Reputation-based Bipartite RS, User-Agnostic Bipartite RS, and Reputation-based Multipartite RS).
 
@@ -89,7 +89,7 @@ The entire codebase for the ranking systems and experimental setup is organized 
 
 ---
 
-## Citation
+## 🎓 Citation
 
 If you use this work, please cite the original thesis:
 @mastersthesis{baltazar2025robust,
@@ -102,8 +102,7 @@ supervisor={Ramos, Guilherme}
 
 ---
 
-## Contact
-
+## 📧 Contact
 For any questions or suggestions, please contact the author or supervisor:
 * **Author**: Martim Nunes Silva Baltazar (martimnunesbaltazar@gmail.com)
 * **Supervisor**: Guilherme Ramos (guilherme.ramos@tecnico.ulisboa.pt)
