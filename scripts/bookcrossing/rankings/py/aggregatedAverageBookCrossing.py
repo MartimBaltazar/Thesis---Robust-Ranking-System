@@ -2,7 +2,16 @@ import os
 import pandas as pd
 import numpy as np
 import time
+from scipy.stats import kendalltau
+import matplotlib.pyplot as plt
 
+
+def compute_kendall_tau(dict1, dict2):
+    common_keys = set(dict1.keys()).intersection(dict2.keys())
+    v1 = [dict1[k] for k in common_keys]
+    v2 = [dict2[k] for k in common_keys]
+    tau, _ = kendalltau(v1, v2)
+    return tau
 
 # === Aggregated Average Ranking Algorithm ===
 def aggregated_ranking_algorithm(df):
@@ -27,29 +36,46 @@ max_rating = item_df["normalized_rating"].max()
 avg_rating = item_df["normalized_rating"].mean()
 
 print(f"Item 0971880107: max rating = {max_rating}, average rating = {avg_rating:.3f}")
-original_df['normalized_rating'] = original_df['normalized_rating'] / 10
+original_df['normalized_rating'] = (original_df['normalized_rating'] +1 )/ 11
 
 # Compute original aggregated rankings
 rankings = aggregated_ranking_algorithm(original_df)
 
-# print("=== Robustness Analysis (Aggregated Average) ===")
-# for percent in ratios:
-#     start_time = time.time()
+# === Plot Original Distribution ===
+# ratings = list(rankings.values())
+# bins = np.arange(0, 1.1, 0.1)
+# hist, bin_edges = np.histogram(ratings, bins=bins)
 
-#     file_name = f"ratings_with_{percent}percent_spam.csv"
-#     file_path = os.path.join(spam_dir, file_name)
+# plt.figure(figsize=(10, 6))
+# plt.bar(bin_edges[:-1], hist, width=0.1, align='edge', edgecolor='black', color='skyblue')
+# for i in range(len(hist)):
+#     plt.text(bin_edges[i] + 0.05, hist[i] + 0.5, str(hist[i]), ha='center', fontsize=12)
+# plt.xlabel('Aggregated Average Rating', fontsize=12)
+# plt.ylabel('Number of Movies', fontsize=12)
+# plt.title('Distribution of Aggregated Average Movie Ratings (Original)', fontsize=14)
+# plt.xticks(bins)
+# plt.grid(axis='y', linestyle='--', alpha=0.7)
+# plt.tight_layout()
+# plt.show()
 
-#     df_attack = pd.read_csv(file_path)
-#     df_attack.columns = ['user_id', 'item_id', 'normalized_rating']
-#     df_attack['normalized_rating'] = df_attack['normalized_rating'] / 10
+print("=== Robustness Analysis (Aggregated Average) ===")
+for percent in ratios:
+    start_time = time.time()
 
-#     rankingsSpam = aggregated_ranking_algorithm(df_attack)
+    file_name = f"ratings_with_{percent}percent_spam.csv"
+    file_path = os.path.join(spam_dir, file_name)
 
-#     # Compute Kendall’s τ
-#     tau_value = compute_kendall_tau(rankings, rankingsSpam)
+    df_attack = pd.read_csv(file_path)
+    df_attack.columns = ['user_id', 'item_id', 'normalized_rating']
+    df_attack['normalized_rating'] = (df_attack['normalized_rating'] + 1) / 11
 
-#     elapsed = time.time() - start_time
-#     print(f"[{percent}% Spam] Kendall’s τ: {tau_value:.4f} | Time taken: {elapsed:.2f} seconds")
+    rankingsSpam = aggregated_ranking_algorithm(df_attack)
+
+    # Compute Kendall’s τ
+    tau_value = compute_kendall_tau(rankings, rankingsSpam)
+
+    elapsed = time.time() - start_time
+    print(f"[{percent}% Spam] Kendall’s τ: {tau_value:.4f} | Time taken: {elapsed:.2f} seconds")
 
 
 # === Bribery Resistance Evaluation ===
@@ -81,14 +107,14 @@ def parse_strategy_cost(txt_path, scale_by_user=False):
     return total_cost
 
 # Target items
-target_items = ["0971880107"]
+target_items = ["0451187903", "0451821971", "0971880107"]
 original_wealth = {item: compute_wealth(original_df, item, rankings) for item in target_items}
 
 print("\n📊 Original Wealth (Aggregated Average):")
 print(original_wealth)
 
 # Bribery attack sets path
-base_path = "/home/martimsbaltazar/Desktop/tese/datasets/BookCrossing/bribery_attack_sets"
+base_path = "/home/martimsbaltazar/Desktop/tese/datasets/BookCrossing/bribery_attack_sets2"
 results = []
 
 for item_id in target_items:

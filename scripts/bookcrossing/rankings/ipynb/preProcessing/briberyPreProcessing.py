@@ -24,7 +24,6 @@ rankings, userReputation = bipartite_ranking_algorithm(df.rename(columns={
 }))
 
 print("User reputations computed:")
-print(userReputation)
 
 # === Select 3 items with at least 10 ratings: high, mid, low popularity ===
 item_counts = df['item_id'].value_counts()
@@ -39,7 +38,7 @@ target_items = [high, mid, low]
 print(f"Selected items: High - {high}, Mid - {mid}, Low - {low}")
 
 # === Prepare output folder ===
-output_root = "/home/martimsbaltazar/Desktop/tese/datasets/BookCrossing/bribery_attack_sets2"
+output_root = "/home/martimsbaltazar/Desktop/tese/datasets/BookCrossing/bribery_attack_sets3"
 os.makedirs(output_root, exist_ok=True)
 
 # === Attack simulation function adapted for BookCrossing ===
@@ -68,11 +67,11 @@ def simulate_attack(df, target_item, mode="push", method="same", strategy="rando
                 reverse=True
             )
             selected_users = sorted_users[:n_target]
+            print(f"Selected users for attack {strategy}: {reputation_dict[selected_users[0]], reputation_dict[selected_users[-1]], reputation_dict[sorted_users[-1]]}")
 
         for user_id in selected_users:
             mask = (modified_df["user_id"] == user_id) & (modified_df["item_id"] == target_item)
             old_rating = modified_df.loc[mask, "normalized_rating"].values[0]
-            # For BookCrossing normalized rating [0..1], push = +0.25, nuke = -0.25, capped between 0 and 1
             new_rating = 1 if mode == "push" else 1/11
             modified_df.loc[mask, "normalized_rating"] = new_rating
             changes.append((user_id, old_rating, new_rating))
