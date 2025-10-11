@@ -81,7 +81,7 @@ The entire codebase for the ranking systems and experimental setup is organized 
     git clone [https://github.com/MartimBaltazar/Thesis](https://github.com/MartimBaltazar/Thesis)—Robust-Ranking-System.git
     cd Thesis—Robust-Ranking-System
     ```
-2.  **Install Dependencies:** (A `requirements.txt` file detailing necessary libraries would be placed here.)
+2.  **Install Dependencies:** (TODO: creating `requirements.txt` )
     ```bash
     # Example command
     pip install -r requirements.txt
